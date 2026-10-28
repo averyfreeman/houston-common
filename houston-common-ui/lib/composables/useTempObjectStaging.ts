@@ -1,11 +1,28 @@
-import { ref, toRaw, unref, watch, computed, type Ref, type UnwrapRef } from "vue";
+import {
+  computed,
+  ref,
+  toRaw,
+  unref,
+  watch,
+  type ComputedRef,
+  type Ref,
+  type UnwrapRef,
+} from "vue";
 import deepEqual from "deep-equal";
 
-export const useTempObjectStaging = <T extends any>(
+export interface TempObjectStaging<T> {
+  tempObject: Ref<UnwrapRef<T>>;
+  modified: ComputedRef<boolean>;
+  resetChanges: () => void;
+}
+
+export const useTempObjectStaging = <T>(
   originalObject: Ref<T>,
-  overrideDefaults?: (_: T) => T
-) => {
-  const tempObject = ref(structuredClone(toRaw(unref(originalObject))));
+  overrideDefaults?: (value: T) => T
+): TempObjectStaging<T> => {
+  const tempObject = ref(
+    structuredClone(toRaw(unref(originalObject)))
+  ) as Ref<UnwrapRef<T>>;
 
   if (overrideDefaults) {
     tempObject.value = overrideDefaults(tempObject.value as T) as UnwrapRef<T>;

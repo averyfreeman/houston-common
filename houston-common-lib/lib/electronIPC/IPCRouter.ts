@@ -2,6 +2,7 @@ import { IPCMessageRouterBackend } from "./IPCMessageRouterBackend";
 import { IPCMessageRouterCockpit } from "./IPCMessageRouterCockpit";
 import { IPCMessageRouterRenderer } from "./IPCMessageRouterRenderer";
 import { IPCMessageRouter } from "./types";
+import type { ElectronIpcMain, ElectronWebContents } from "./electronTypes";
 
 export class IPCRouter {
   private static instance: IPCMessageRouter | null = null;
@@ -12,7 +13,7 @@ export class IPCRouter {
     IPCRouter.instance = new IPCMessageRouterRenderer();
   }
 
-  public static initBackend(webcontents: Electron.WebContents, ipcMain: Electron.IpcMain) {
+  public static initBackend(webcontents: ElectronWebContents, ipcMain: ElectronIpcMain) {
     IPCRouter.instance = new IPCMessageRouterBackend(webcontents, ipcMain);
   }
 
